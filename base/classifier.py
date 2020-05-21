@@ -57,9 +57,10 @@ def load_dataset(name, **op):
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[1]
+    # config_file = sys.argv[1]
 
-    config = json.load(open(config_file))
+    # config = json.load(open(config_file))
+    config = json.load(open('./opt.sst-2.bert.json'))
     
     train_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
 

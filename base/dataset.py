@@ -8,7 +8,8 @@ from transformers import BertTokenizer
 bert_tokenizer = None
 
 
-def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="bert-base-uncased", batch_size=64, batch_first=False, padding_to=0, sort_within_batch=True, device="cpu"):
+def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="bert-base-uncased",
+                batch_size=64, batch_first=False, padding_to=0, sort_within_batch=True, device="cpu"):
     def padding(batch, vocab, to=padding_to):
         # import pdb; pdb.set_trace()
         if not padding_to or padding_to <= 0 or tokenizer_name == "bert":

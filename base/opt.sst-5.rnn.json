@@ -1,0 +1,22 @@
+{
+    "model": {
+        "encoder": {
+            "encoder_type": "rnn",
+            "rnn_type": "lstm",
+            "num_layers": 2,
+            "hidden_size": 256,
+            "bidirectional": true,
+
+            "out_dim": 256,
+            "dropout_p": 0.1
+        },
+        "out_class": 2,
+        "dropout_p": 0.1
+    },
+    "dataset": {
+        "name": "SST-5",
+        "batch_size": 64,
+        "padding_to": 0,
+        "batch_first": false
+    }
+}

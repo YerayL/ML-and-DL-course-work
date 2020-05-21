@@ -1,0 +1,23 @@
+{
+    "model": {
+        "encoder": {
+            "encoder_type": "bert",
+            "pretrained_model": "bert-base-uncased",
+
+            "out_dim": 128,
+            "dropout_p": 0.1
+        },
+        "out_class": 5,
+        "dropout_p": 0.1
+    },
+    "dataset": {
+        "name": "SST-5",
+        "tokenizer_name": "bert",
+        "bert_pretrained_model": "bert-base-uncased",
+
+        "batch_size": 64,
+        "padding_to": 32,
+        "sort_within_batch": false,
+        "batch_first": true
+    }
+}

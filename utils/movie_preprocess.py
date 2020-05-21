@@ -26,7 +26,7 @@ refer: https://www.kaggle.com/serkanpeldek/text-classification-with-embedding-co
     过滤低频词(<=2)
 """
 
-review_dataset_path = "../data/review_polarity/txt_sentoken"
+review_dataset_path = "../raw data/review_polarity/txt_sentoken"
 # print(os.listdir(review_dataset_path))
 
 # Positive and negative reviews folder paths
@@ -336,7 +336,9 @@ if __name__ == "__main__":
         X_train[i] = X_train[i].replace('\n', '')
     for i,j in enumerate(X_test):
         X_test[i] = re.sub(re_punct, "", j)
-        X_train[i] = X_train[i].replace('\n', '')
+        X_test[i] = X_train[i].replace('\n', '')
+
+
     import random
 
     X = list(zip(X_train,y_train))

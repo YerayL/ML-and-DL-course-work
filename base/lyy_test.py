@@ -16,11 +16,14 @@ from bert import BertEncoder, BertClassification
 from dataset import *
 from train import *
 
-torch.cuda.set_device(0)
+# import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+
+torch.cuda.set_device(3)
 
 class Classifier(nn.Module):
     def __init__(self, encoder, out_class, hidden_size=256, dropout_p=0.1):
-        super().__init__()
+        super(Classifier,self).__init__()
 
         out_dim = encoder.out_dim
         self.encoder = encoder
@@ -57,9 +60,10 @@ def load_dataset(name, **op):
 
 
 if __name__ == "__main__":
-    config_file = sys.argv[1]
+    # config_file = sys.argv[1]
 
-    config = json.load(open(config_file))
+    # config = json.load(open(config_file))
+    config = json.load(open('./opt.sst-2.bert.json'))
     
     train_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
 

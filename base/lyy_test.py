@@ -1,3 +1,8 @@
+# Lan:我用这个运行测试
+# Lan:我用这个运行测试
+# Lan:我用这个运行测试
+
+
 import sys
 import json
 
@@ -16,8 +21,11 @@ from bert import BertEncoder, BertClassification
 from dataset import *
 from train import *
 
-# import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+
+
+
 
 torch.cuda.set_device(3)
 

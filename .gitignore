@@ -12,7 +12,6 @@ dist
 build
 
 # My configurations:
-*.json
 __pycache__/
 /.idea/
 *.log

@@ -23,8 +23,8 @@ class BertEncoder(nn.Module):
         self.out_dim = out_dim
         self.bert = BertModel.from_pretrained(pretrained_model)
 
-        # for p in self.bert.parameters():
-        #    p.requires_grad = False
+        for p in self.bert.parameters():
+           p.requires_grad = False
 
         self.out = nn.Sequential(
                         nn.Dropout(p=dropout_p),

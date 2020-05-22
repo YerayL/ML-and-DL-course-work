@@ -8,8 +8,7 @@ from transformers import BertTokenizer
 bert_tokenizer = None
 
 
-def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="bert-base-uncased",
-                batch_size=64, batch_first=False, padding_to=0, sort_within_batch=True, device="cpu"):
+def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="bert-base-uncased", batch_size=64, batch_first=False, padding_to=0, sort_within_batch=True, device="cpu"):
     def padding(batch, vocab, to=padding_to):
         # import pdb; pdb.set_trace()
         if not padding_to or padding_to <= 0 or tokenizer_name == "bert":
@@ -23,7 +22,6 @@ def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="b
     def tokenizer(text=""):
         name = tokenizer_name
         if name == "builtin":
-            text = text.lower()
             return text.strip().split()
         elif name == "bert":
             global bert_tokenizer
@@ -69,14 +67,14 @@ def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="b
         TEXT.build_vocab(_train.text, _train.label, min_freq=1)
     LABEL.build_vocab(_train)
 
+    sort_key = lambda x: len(x.text)
     train_iter = BucketIterator(_train,
                                  batch_size=batch_size,
                                  train=True,
                                  repeat=False,
                                  shuffle=True,
                                  sort_within_batch=sort_within_batch,
-                                #  sort_key=lambda x: len(x.text),
-                                 sort_key=None,
+                                 sort_key=(sort_key if sort_within_batch else None),
                                  device=device)
     test_iter = BucketIterator(_test, batch_size=1, train=False, repeat=False, shuffle=True,
             sort_within_batch=False, sort_key=lambda x: len(x.text), device=device)

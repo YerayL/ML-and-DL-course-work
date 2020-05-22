@@ -1,7 +1,5 @@
-# Lan:我用这个运行测试
-# Lan:我用这个运行测试
-# Lan:我用这个运行测试
-
+#!/usr/bin/env python3
+# coding: utf-8
 
 import sys
 import json
@@ -21,13 +19,13 @@ from bert import BertEncoder, BertClassification
 from dataset import *
 from train import *
 
-import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+# import os
+# os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 
 
 
-torch.cuda.set_device(3)
+torch.cuda.set_device(0)
 
 class Classifier(nn.Module):
     def __init__(self, encoder, out_class, hidden_size=256, dropout_p=0.1):
@@ -68,7 +66,7 @@ def load_dataset(name, **op):
 
 
 if __name__ == "__main__":
-    # config_file = sys.argv[1]
+    config_file = './opt.sst-2.bert.json'
 
     # config = json.load(open(config_file))
     config = json.load(open('./opt.sst-2.bert.json'))
@@ -115,5 +113,5 @@ if __name__ == "__main__":
     # Acc: opt.sst-5.rnn.json tensor(0.2958, device='cuda:0') : 4000
     # Acc: opt.sst-5.cnn.json tensor(0.3081, device='cuda:0') : 4000
     # Acc: opt.sst-5.bert.json tensor(0.4484, device='cuda:0'): 4000
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     print(f"Acc: {config_file}", (y-g).eq(0).sum().true_divide(y.size(0)))

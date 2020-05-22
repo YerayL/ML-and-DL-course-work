@@ -69,4 +69,4 @@ def prep_sst_5(data="../data/SST-5"):
 
 
 prep_sst_2()
-# prep_sst_5()
+prep_sst_5()

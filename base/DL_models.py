@@ -5,9 +5,12 @@ from scipy.sparse import hstack
 import numpy as np
 import os
 
+#这里填数据集名字就行了
+dataset = "SST-5"
+
 data_path = "data"
-train = pd.read_csv(os.path.join(data_path, "movie", "train.tsv"), sep='\t',header=None,names=["label", "data"])
-test = pd.read_csv(os.path.join(data_path, "movie", "test.tsv"), sep='\t',header=None,names=["label", "data"])
+train = pd.read_csv(os.path.join(data_path, dataset, "train.tsv"), sep='\t',header=None,names=["label", "data"])
+test = pd.read_csv(os.path.join(data_path, dataset, "test.tsv"), sep='\t',header=None,names=["label", "data"])
 x_train = train['data']
 y_train = train['label']
 x_test = test['data']
@@ -48,21 +51,44 @@ test_features = hstack([x_test_counts,x_test_tfidf_word ,x_test_tfidf_ngram])
 train_features.shape
 
 
-#朴素贝叶斯
-#from sklearn.naive_bayes import MultinomialNB
-#clf = MultinomialNB().fit(train_features, y_train)
+# 机器学习算法合集
+from sklearn.naive_bayes import MultinomialNB
+clf = MultinomialNB()
 
-from sklearn.linear_model import SGDClassifier
-#SGDClassifier是一系列采用了梯度下降来求解参数的算法的集合，默认是SVM
-clf = SGDClassifier(alpha=0.001,
-                    loss='log',    #hinge代表SVM，log是逻辑回归
-                    early_stopping=True,
-                    eta0=0.001,
-                    learning_rate='adaptive', #constant、optimal、invscaling、adaptive
-                    max_iter=100
-                   )
+# from sklearn.naive_bayes import MultinomialNB
+# clf = MultinomialNB()
 
-#%%
+# from sklearn.neighbors import KNeighborsClassifier
+# clf = KNeighborsClassifier()
+
+# from sklearn.tree import DecisionTreeRegressor
+# clf = DecisionTreeRegressor()
+#
+# from sklearn.ensemble import AdaBoostClassifier
+# clf = AdaBoostClassifier()
+#
+# from sklearn.ensemble import BaggingClassifier
+# clf = BaggingClassifier()
+#
+# from sklearn.ensemble import GradientBoostingClassifier
+# clf = GradientBoostingClassifier()
+
+# from sklearn.ensemble import RandomForestClassifier
+# clf = RandomForestClassifier()
+
+# from sklearn.ensemble import ExtraTreesClassifier
+# clf = ExtraTreesClassifier()
+
+# from sklearn.naive_bayes import SGDClassifier
+# SGDClassifier是一系列采用了梯度下降来求解参数的算法的集合，默认是SVM 也可以lr, 支持多分类
+# clf = SGDClassifier(alpha=0.001,
+#                     loss='hinge',    #hinge代表SVM，log是逻辑回归
+#                     early_stopping=True,
+#                     eta0=0.001,
+#                     learning_rate='adaptive', #constant、optimal、invscaling、adaptive
+#                     max_iter=100
+#                    )
+
 
 #打乱数据，训练
 from sklearn.utils import shuffle
@@ -74,4 +100,9 @@ predict = clf.predict(test_features)
 #测试集的评估
 print(np.mean(predict == y_test))
 
-#0.85
+
+#lr 0.85
+#svm 0.8675
+#NB 0.8275
+
+

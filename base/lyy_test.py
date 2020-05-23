@@ -110,6 +110,7 @@ if __name__ == "__main__":
 
     y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.5.pt",
                     criterion=criterion, device="cuda", handler=model_eval)
+
     print('y:',y , 'g:', g)
     # Config                                                  : Iters
     # Acc: opt.sst-2.rnn.json tensor(0.7569, device='cuda:0') : 8000

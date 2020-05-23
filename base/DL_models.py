@@ -52,33 +52,39 @@ train_features.shape
 
 
 # 机器学习算法合集
-from sklearn.naive_bayes import MultinomialNB
-clf = MultinomialNB()
-
+# 1.朴素贝叶斯
 # from sklearn.naive_bayes import MultinomialNB
 # clf = MultinomialNB()
 
+# 2.KNN
 # from sklearn.neighbors import KNeighborsClassifier
 # clf = KNeighborsClassifier()
 
+# 3.决策树
 # from sklearn.tree import DecisionTreeRegressor
 # clf = DecisionTreeRegressor()
-#
+
+# 4.AdaBoost
 # from sklearn.ensemble import AdaBoostClassifier
 # clf = AdaBoostClassifier()
-#
+
+# 5.Bagging
 # from sklearn.ensemble import BaggingClassifier
 # clf = BaggingClassifier()
-#
+
+# 6.GradientBoosting
 # from sklearn.ensemble import GradientBoostingClassifier
 # clf = GradientBoostingClassifier()
 
+# 7.RandomForest
 # from sklearn.ensemble import RandomForestClassifier
 # clf = RandomForestClassifier()
 
+# 8.ExtraTrees
 # from sklearn.ensemble import ExtraTreesClassifier
 # clf = ExtraTreesClassifier()
 
+# SVM or LR
 # from sklearn.naive_bayes import SGDClassifier
 # SGDClassifier是一系列采用了梯度下降来求解参数的算法的集合，默认是SVM 也可以lr, 支持多分类
 # clf = SGDClassifier(alpha=0.001,

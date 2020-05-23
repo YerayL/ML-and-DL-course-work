@@ -25,7 +25,8 @@ from train import *
 # os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 
-
+# early stop
+PATIENCE = 10
 
 torch.cuda.set_device(3)
 
@@ -67,13 +68,14 @@ def load_dataset(name, **op):
     return sst_dataset(root=name, device="cuda", **op)
 
 
+
 if __name__ == "__main__":
     config_file = './opt.movie.bert.json'
 
     # config = json.load(open(config_file))
     config = json.load(open('./opt.movie.bert.json'))
     
-    train_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
+    train_iter, dev_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
 
     if not config["model"]["encoder"]["encoder_type"] == "bert":
         emb = nn.Embedding(num_embeddings=len(TEXT.vocab), embedding_dim=300,
@@ -105,13 +107,21 @@ if __name__ == "__main__":
         return y_predict.argmax().view(1,1), label.view(1,1)
 
 
-    train(train_iter, model, criterion, optimizer, max_iters=5, save_every=5, device="cuda",
-          handler=model_train)
 
-    y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.5.pt",
+
+
+
+
+
+
+    train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
+          handler=model_train, patience=PATIENCE)
+
+    y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
                     criterion=criterion, device="cuda", handler=model_eval)
 
-    print('y:',y , 'g:', g)
+
+
     # Config                                                  : Iters
     # Acc: opt.sst-2.rnn.json tensor(0.7569, device='cuda:0') : 8000
     # Acc: opt.sst-2.cnn.json tensor(0.7706, device='cuda:0') : 8000

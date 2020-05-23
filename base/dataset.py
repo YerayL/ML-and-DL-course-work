@@ -59,13 +59,14 @@ def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="b
                 postprocessing=partial(padding, to=padding_to),
                 tokenize=tokenizer)
     LABEL = Field(sequential=False, unk_token=None)
-    _train, _test = TabularDataset.splits(path="data/" + root, root="data", train="train.tsv", test="test.tsv",
+    _train, _dev, _test = TabularDataset.splits(path="data/" + root, root="data", train="train.tsv", validation = 'dev.tsv', test="test.tsv",
                                     format='csv', skip_header=False, fields=[("label", LABEL), ("text", TEXT)],
                                     csv_reader_params={"quoting": csv.QUOTE_NONE, "delimiter": "\t"})
     # import pdb; pdb.set_trace()
     if tokenizer_name == "builtin":
         TEXT.build_vocab(_train.text, _train.label, min_freq=1)
     LABEL.build_vocab(_train)
+
 
     sort_key = lambda x: len(x.text)
     train_iter = BucketIterator(_train,
@@ -76,7 +77,9 @@ def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="b
                                  sort_within_batch=sort_within_batch,
                                  sort_key=(sort_key if sort_within_batch else None),
                                  device=device)
-    test_iter = BucketIterator(_test, batch_size=1, train=False, repeat=False, shuffle=True,
+    dev_iter = BucketIterator(_dev, batch_size=batch_size, train=False, repeat=False, shuffle=True,
+            sort_within_batch=False, sort=False, device=device)
+    test_iter = BucketIterator(_test, batch_size=batch_size, train=False, repeat=False, shuffle=True,
             sort_within_batch=False, sort_key=lambda x: len(x.text), device=device)
 
-    return train_iter, test_iter, TEXT, LABEL
+    return train_iter, dev_iter,test_iter, TEXT, LABEL

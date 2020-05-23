@@ -18,6 +18,9 @@ from train import *
 
 torch.cuda.set_device(0)
 
+# early stop
+PATIENCE = 10
+
 class Classifier(nn.Module):
     def __init__(self, encoder, out_class, hidden_size=256, dropout_p=0.1):
         super().__init__()
@@ -29,7 +32,7 @@ class Classifier(nn.Module):
                         nn.Dropout(p=dropout_p),
                         nn.ReLU(),
                         nn.Linear(hidden_size, out_class))
-    
+
     def forward(self, x, x_length=[]):
         x = self.encoder(x, x_length)
         # import pdb; pdb.set_trace()
@@ -60,7 +63,7 @@ if __name__ == "__main__":
     config_file = sys.argv[1]
 
     config = json.load(open(config_file))
-    
+
     train_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
 
     if not config["model"]["encoder"]["encoder_type"] == "bert":
@@ -73,7 +76,7 @@ if __name__ == "__main__":
     model = model.to("cuda")
     criterion = nn.CrossEntropyLoss().to("cuda")
     optimizer = optim.Adam(model.parameters())
-    
+
     def model_train(e):
         e.model.zero_grad()
         (x, x_length), label = e.batch.text, e.batch.label
@@ -81,7 +84,7 @@ if __name__ == "__main__":
         y_predict = e.model(x, x_length)
         loss = e.criterion(y_predict, label)
         loss.backward()
-        
+
         e.optimizer.step()
         e.progress.set_postfix(loss=loss.item())
 
@@ -93,9 +96,11 @@ if __name__ == "__main__":
         return y_predict.argmax().view(1,1), label.view(1,1)
 
 
-    train(train_iter, model, criterion, optimizer, max_iters=500, save_every=100, device="cuda", handler=model_train)
-    y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.500.pt", criterion=criterion, device="cuda", handler=model_eval)
-    
+    train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=100, device="cuda",
+          handler=model_train, patience=PATIENCE)
+    y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
+                    criterion=criterion, device="cuda", handler=model_eval)
+
     # Config                                                  : Iters
     # Acc: opt.sst-2.rnn.json tensor(0.7569, device='cuda:0') : 8000
     # Acc: opt.sst-2.cnn.json tensor(0.7706, device='cuda:0') : 8000

@@ -75,7 +75,7 @@ if __name__ == "__main__":
 
     model = model.to("cuda")
     criterion = nn.CrossEntropyLoss().to("cuda")
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(),lr=0.00001)
 
     def model_train(e):
         e.model.zero_grad()

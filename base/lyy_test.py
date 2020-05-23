@@ -15,6 +15,8 @@ from torch.nn.utils.rnn import pad_packed_sequence as unpack
 from cnn import TextCNNEncoder
 from rnn import RNNEncoder
 from bert import BertEncoder, BertClassification
+from transformers import BertForSequenceClassification
+
 
 from dataset import *
 from train import *
@@ -25,7 +27,7 @@ from train import *
 
 
 
-torch.cuda.set_device(0)
+torch.cuda.set_device(3)
 
 class Classifier(nn.Module):
     def __init__(self, encoder, out_class, hidden_size=256, dropout_p=0.1):
@@ -66,23 +68,24 @@ def load_dataset(name, **op):
 
 
 if __name__ == "__main__":
-    config_file = './opt.sst-2.bert.json'
+    config_file = './opt.movie.bert.json'
 
     # config = json.load(open(config_file))
-    config = json.load(open('./opt.sst-2.bert.json'))
+    config = json.load(open('./opt.movie.bert.json'))
     
     train_iter, test_iter, TEXT, LABEL = load_dataset(**config["dataset"])
 
     if not config["model"]["encoder"]["encoder_type"] == "bert":
-        emb = nn.Embedding(num_embeddings=len(TEXT.vocab), embedding_dim=300, padding_idx=TEXT.vocab.stoi["<pad>"])
+        emb = nn.Embedding(num_embeddings=len(TEXT.vocab), embedding_dim=300,
+                           padding_idx=TEXT.vocab.stoi["<pad>"])
     else:
         emb = None
         # model = BertClassification(config["model"]["out_dim"])
     model = build_model(emb=emb, **config["model"])
-
+    # BertForSequenceClassification
     model = model.to("cuda")
     criterion = nn.CrossEntropyLoss().to("cuda")
-    optimizer = optim.Adam(model.parameters())
+    optimizer = optim.Adam(model.parameters(), lr=0.00001)
     
     def model_train(e):
         e.model.zero_grad()
@@ -91,7 +94,6 @@ if __name__ == "__main__":
         y_predict = e.model(x, x_length)
         loss = e.criterion(y_predict, label)
         loss.backward()
-        
         e.optimizer.step()
         e.progress.set_postfix(loss=loss.item())
 
@@ -103,9 +105,12 @@ if __name__ == "__main__":
         return y_predict.argmax().view(1,1), label.view(1,1)
 
 
-    train(train_iter, model, criterion, optimizer, max_iters=500, save_every=100, device="cuda", handler=model_train)
-    y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.500.pt", criterion=criterion, device="cuda", handler=model_eval)
-    
+    train(train_iter, model, criterion, optimizer, max_iters=5, save_every=5, device="cuda",
+          handler=model_train)
+
+    y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.5.pt",
+                    criterion=criterion, device="cuda", handler=model_eval)
+    print('y:',y , 'g:', g)
     # Config                                                  : Iters
     # Acc: opt.sst-2.rnn.json tensor(0.7569, device='cuda:0') : 8000
     # Acc: opt.sst-2.cnn.json tensor(0.7706, device='cuda:0') : 8000

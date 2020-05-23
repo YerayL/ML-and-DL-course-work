@@ -24,6 +24,7 @@ refer: https://www.kaggle.com/serkanpeldek/text-classification-with-embedding-co
     过滤停用词
     过滤短词(<=2)
     过滤低频词(<=2)
+    ...
 """
 
 review_dataset_path = "../raw data/review_polarity/txt_sentoken"
@@ -151,6 +152,7 @@ if __name__ == "__main__":
     pos_review_file_names = os.listdir(pos_review_folder_path)
     neg_review_file_names = os.listdir(neg_review_folder_path)
 
+    print(pos_review_file_names[0])
     pos_data, pos_target = get_data_target(folder_path=pos_review_folder_path,
                                            file_names=pos_review_file_names,
                                            review_type="positive")
@@ -163,13 +165,14 @@ if __name__ == "__main__":
     data = pos_data + neg_data
     target_ = pos_target + neg_target
     print("总共数据：", len(data))
-
     # 标签转为数字，正1负0
     le = LabelEncoder()
     le.fit(target_)
     target = le.transform(target_)
-
+    print(data[0])
     X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, stratify=target, random_state=24)
+
+
 
     print("训练数据数：", len(X_train))
     print("训练标签数：", len(y_train))
@@ -244,6 +247,7 @@ if __name__ == "__main__":
     print("Original Review:\n", X_train[random_number][:500])
     print("=" * 100)
     print("Processed Review:\n", textProcessor1.process(text=X_train[random_number][:500]))
+
 
     # 建立词汇表
     vocabularyHelper = VocabularyHelper(textProcessor=textProcessor1)
@@ -321,52 +325,60 @@ if __name__ == "__main__":
     print("=" * 100)
     print("Processed Text:\n", processed_review)
 
+
+
+    for i,j in enumerate(data):
+        data[i] = textProcessor1.process(data[i])
+        data[i] = textProcessor2.process(data[i])
+
     X_train, X_test, y_train, y_test = train_test_split(data, target, test_size=0.2, stratify=target, random_state=24)
+
     print("Dataset splited into train and test parts...")
     print("train data length  :", len(X_train))
     print("train target length:", len(y_train))
     print()
     print("test data length  :", len(X_test))
     print("test target length:", len(y_test))
+    print(X_test[0])
 
-    """去除符号"""
-    re_punct = r"[\[\]\{\}\:\;\'\"\,\<\.\>\/\?\\\|\`\!\@\#\$\%\^\&\*\(\)\-\_\=\+]"
-    for i,j in enumerate(X_train):
-        X_train[i] = re.sub(re_punct, "", j)
-        X_train[i] = X_train[i].replace('\n', '')
-    for i,j in enumerate(X_test):
-        X_test[i] = re.sub(re_punct, "", j)
-        X_test[i] = X_train[i].replace('\n', '')
+    # """去除符号"""
+    # re_punct = r"[\[\]\{\}\:\;\'\"\,\<\.\>\/\?\\\|\`\!\@\#\$\%\^\&\*\(\)\-\_\=\+]"
+    # for i,j in enumerate(X_train):
+    #     X_train[i] = re.sub(re_punct, "", j)
+    #     X_train[i] = X_train[i].replace('\n', '')
+    # for i,j in enumerate(X_test):
+    #     X_test[i] = re.sub(re_punct, "", j)
+    #     X_test[i] = X_test[i].replace('\n', '')
 
 
-    import random
-
-    X = list(zip(X_train,y_train))
-
-    Y = list(zip(X_test,y_test))
-    print(Y)
-    random.shuffle(X)
-    print(Y)
-    random.shuffle(Y)
-
-    X_train = [i for i,j in X]
-    y_train = [j for i,j in X]
-    X_test = [i for i,j in Y]
-    y_test = [j for i,j in Y]
+    # import random
+    #
+    # X = list(zip(X_train,y_train))
+    # Y = list(zip(X_test,y_test))
+    #
+    # print(Y)
+    # random.shuffle(X)
+    # print(Y)
+    # random.shuffle(Y)
+    #
+    # X_train = [i for i,j in X]
+    # y_train = [j for i,j in X]
+    # X_test = [i for i,j in Y]
+    # y_test = [j for i,j in Y]
 
 
     # 字典中的key值即为csv中列名
     dataframe = pd.DataFrame({'a_name': y_train[:1400], 'b_name': X_train[:1400]})
 
     # 将DataFrame存储为csv,index表示是否显示行名，default=True
-    dataframe.to_csv("train.tsv", index=False, sep='\t', header=False)
+    dataframe.to_csv("../base/data/movie/train.tsv", index=False, sep='\t', header=False)
 
     dataframe = pd.DataFrame({'a_name': y_train[1400:], 'b_name': X_train[1400:]})
 
     # 将DataFrame存储为csv,index表示是否显示行名，default=True
-    dataframe.to_csv("dev.tsv", index=False, sep='\t', header=False)
+    dataframe.to_csv("../base/data/movie/dev.tsv", index=False, sep='\t', header=False)
 
     dataframe = pd.DataFrame({'a_name': y_test, 'b_name': X_test})
 
     # 将DataFrame存储为csv,index表示是否显示行名，default=True
-    dataframe.to_csv("test.tsv", index=False, sep='\t', header=False)
+    dataframe.to_csv("../base/data/movie/test.tsv", index=False, sep='\t', header=False)

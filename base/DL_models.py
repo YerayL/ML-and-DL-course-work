@@ -84,7 +84,7 @@ train_features.shape
 # from sklearn.ensemble import ExtraTreesClassifier
 # clf = ExtraTreesClassifier()
 
-# SVM or LR
+# 9.SVM or LR
 # from sklearn.naive_bayes import SGDClassifier
 # SGDClassifier是一系列采用了梯度下降来求解参数的算法的集合，默认是SVM 也可以lr, 支持多分类
 # clf = SGDClassifier(alpha=0.001,

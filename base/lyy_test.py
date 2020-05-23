@@ -107,18 +107,13 @@ if __name__ == "__main__":
         return y_predict.argmax().view(1,1), label.view(1,1)
 
 
-
-
-
-
-
-
-
     train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
           handler=model_train, patience=PATIENCE)
 
-    y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
-                    criterion=criterion, device="cuda", handler=model_eval)
+
+
+    # y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
+    #                 criterion=criterion, device="cuda", handler=model_eval)
 
 
 

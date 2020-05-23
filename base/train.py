@@ -38,7 +38,7 @@ def eval(data_iter, model,criterion, epoch):
             predicted = model(words, lens)  # predicted_seq : (batch_size, seq_len)
             loss = criterion(predicted, labels)
             total_loss += loss.item()
-            tqdm.write('total_loss', round(total_loss,3),'loss',loss.item(), 'epoch', epoch)
+            print('\ntotal_loss', round(total_loss,3),'loss',loss.item(), 'epoch', epoch)
             predicted = predicted.max(dim=1)[1]
             r += (predicted - labels).eq(0).sum().item()
             total += predicted.size(0)

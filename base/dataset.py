@@ -79,7 +79,7 @@ def sst_dataset(root="SST-2", tokenizer_name="builtin", bert_pretrained_model="b
                                  device=device)
     dev_iter = BucketIterator(_dev, batch_size=batch_size, train=False, repeat=False, shuffle=True,
             sort_within_batch=False, sort=False, device=device)
-    test_iter = BucketIterator(_test, batch_size=batch_size, train=False, repeat=False, shuffle=True,
+    test_iter = BucketIterator(_test, batch_size=1, train=False, repeat=False, shuffle=True,
             sort_within_batch=False, sort_key=lambda x: len(x.text), device=device)
 
     return train_iter, dev_iter,test_iter, TEXT, LABEL

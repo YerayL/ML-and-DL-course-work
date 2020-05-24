@@ -107,7 +107,7 @@ if __name__ == "__main__":
         return y_predict.argmax().view(1,1), label.view(1,1)
 
 
-    train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
+    # train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
           handler=model_train, patience=PATIENCE)
 
 

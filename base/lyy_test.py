@@ -26,7 +26,7 @@ from train import *
 
 
 # early stop
-PATIENCE = 10
+PATIENCE = 200
 
 torch.cuda.set_device(3)
 

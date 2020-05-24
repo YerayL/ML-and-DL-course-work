@@ -101,8 +101,10 @@ from sklearn.utils import shuffle
 train_features,y_train=shuffle(train_features,y_train )
 
 clf.fit(train_features, y_train)
+
 #测试过程
 predict = clf.predict(test_features)
+
 #测试集的评估
 print(np.mean(predict == y_test))
 

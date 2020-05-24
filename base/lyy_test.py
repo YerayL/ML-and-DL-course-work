@@ -108,7 +108,7 @@ if __name__ == "__main__":
 
 
     # train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
-          handler=model_train, patience=PATIENCE)
+    #       handler=model_train, patience=PATIENCE)
 
 
 

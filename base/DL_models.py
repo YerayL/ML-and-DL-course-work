@@ -37,7 +37,7 @@ print(x_train_tfidf_word.shape)
 #提取TF-IDF特征-ngram
 #将各文档中每个单词的出现次数除以该文档中所有单词的总数：这些新的特征称之为词频tf。
 from sklearn.feature_extraction.text import TfidfTransformer
-tfidf_transformer = TfidfVectorizer(analyzer='word',ngram_range=(2,3),max_features=50000)
+tfidf_transformer = TfidfVectorizer(analyzer='word', ngram_range=(2,3),max_features=50000)
 tfidf_transformer.fit(x_train)
 x_train_tfidf_ngram = tfidf_transformer.transform(x_train)
 x_test_tfidf_ngram = tfidf_transformer.transform(x_test)

@@ -46,7 +46,7 @@ def eval(data_iter, model,criterion, epoch):
     return acc
 
 def train(data, dev_iter, model, criterion, optimizer, max_iters=1000, save_every=1000,
-          device="cuda", handler=None, patience=10):
+          device="cuda", handler=None, patience=10000):
     model.train()
     meta = Event(name="meta")
     progress = tqdm(total=max_iters, miniters=0)

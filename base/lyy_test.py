@@ -112,8 +112,8 @@ if __name__ == "__main__":
 
 
 
-    # y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
-    #                 criterion=criterion, device="cuda", handler=model_eval)
+    y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
+                    criterion=criterion, device="cuda", handler=model_eval)
 
 
 

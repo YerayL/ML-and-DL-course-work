@@ -1,0 +1,19 @@
+{
+    "model": {
+        "encoder": {
+            "encoder_type": "cnn",
+            "cnn_filter_num": 64,
+
+            "out_dim": 256,
+            "dropout_p": 0.1
+        },
+        "out_class": 2,
+        "dropout_p": 0.1
+    },
+    "dataset": {
+        "name": "movie",
+        "batch_size": 128,
+        "padding_to": 32,
+        "batch_first": true
+    }
+}

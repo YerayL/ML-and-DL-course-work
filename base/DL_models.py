@@ -6,7 +6,7 @@ import numpy as np
 import os
 
 #这里填数据集名字就行了
-dataset = "SST-5"
+dataset = "movie"
 
 data_path = "data"
 train = pd.read_csv(os.path.join(data_path, dataset, "train.tsv"), sep='\t',header=None,names=["label", "data"])
@@ -85,15 +85,15 @@ train_features.shape
 # clf = ExtraTreesClassifier()
 
 # 9.SVM or LR
-# from sklearn.naive_bayes import SGDClassifier
+from sklearn.linear_model import SGDClassifier
 # SGDClassifier是一系列采用了梯度下降来求解参数的算法的集合，默认是SVM 也可以lr, 支持多分类
-# clf = SGDClassifier(alpha=0.001,
-#                     loss='hinge',    #hinge代表SVM，log是逻辑回归
-#                     early_stopping=True,
-#                     eta0=0.001,
-#                     learning_rate='adaptive', #constant、optimal、invscaling、adaptive
-#                     max_iter=100
-#                    )
+clf = SGDClassifier(alpha=0.001,
+                    loss='hinge',    #hinge代表SVM，log是逻辑回归
+                    early_stopping=True,
+                    eta0=0.001,
+                    learning_rate='adaptive', #constant、optimal、invscaling、adaptive
+                    max_iter=100
+                   )
 
 
 #打乱数据，训练
@@ -108,9 +108,13 @@ predict = clf.predict(test_features)
 #测试集的评估
 print(np.mean(predict == y_test))
 
-
-#lr 0.85
+#KNN 0.53
+#lr 0.8575
 #svm 0.8675
 #NB 0.8275
-
-
+#决策树 0.6575
+#Adaboost 0.7675
+#Bagging 0.72
+#GradientBoosting 0.795
+#RandomForest 0.835
+#ExtraTrees 0.855

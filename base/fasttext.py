@@ -21,6 +21,8 @@ def data_preprocess(input_file_content,  output_file):
                 head="__label__"
                 label=head+label
                 f2.write(f"{label.strip()}\t{sent}\n")
+
+
 if __name__ == "__main__":
     data_preprocess(os.path.join(root, dataset, "train.tsv"), os.path.join(root, dataset, "fasttext_train.train"))
     data_preprocess(os.path.join(root, dataset, "dev.tsv"),  os.path.join(root, dataset, "fasttext_dev.txt"))

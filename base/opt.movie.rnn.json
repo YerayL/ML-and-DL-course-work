@@ -17,6 +17,7 @@
         "name": "movie",
         "batch_size": 128,
         "padding_to": 0,
-        "batch_first": false
+        "batch_first": false,
+        "sort_within_batch":true
     }
 }

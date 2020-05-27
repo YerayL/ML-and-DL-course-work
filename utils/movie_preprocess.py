@@ -179,12 +179,12 @@ if __name__ == "__main__":
     print("测试样本数：", len(X_test))
     print("测试标签数", len(y_test))
 
-    # fig, axarr = plt.subplots(nrows=1, ncols=2, figsize=(8, 4), sharey=True)
-    # axarr[0].set_title("Number of samples in train")
-    # sns.countplot(x=y_train, ax=axarr[0])
-    # axarr[1].set_title("Number of samples in test")
-    # sns.countplot(x=y_test, ax=axarr[1])
-    # plt.show()
+    fig, axarr = plt.subplots(nrows=1, ncols=2, figsize=(8, 4), sharey=True)
+    axarr[0].set_title("Number of samples in train")
+    sns.countplot(x=y_train, ax=axarr[0])
+    axarr[1].set_title("Number of samples in test")
+    sns.countplot(x=y_test, ax=axarr[1])
+    plt.show()
 
 
     text_len = np.vectorize(len) # 向量化函数

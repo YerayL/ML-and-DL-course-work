@@ -26,7 +26,7 @@ from train import *
 
 
 # early stop
-PATIENCE = 200
+PATIENCE = None
 
 torch.cuda.set_device(3)
 
@@ -87,7 +87,14 @@ if __name__ == "__main__":
     # BertForSequenceClassification
     model = model.to("cuda")
     criterion = nn.CrossEntropyLoss().to("cuda")
-    optimizer = optim.Adam(model.parameters(), lr=0.00001)
+    # encoder = list(map(id, model.encoder.parameters()))
+    # out = list(map(id, model.out.parameters()))
+    # params = [
+    #     {"params": model.encoder.parameters()},
+    #     {"params": model.out.parameters(), "lr": 0.0001},
+    # ]
+    # optimizer = optim.Adam(params, lr=0.00001)
+    optimizer = optim.Adam(model.parameters())
     
     def model_train(e):
         e.model.zero_grad()
@@ -104,15 +111,15 @@ if __name__ == "__main__":
         (x, x_length), label = e.batch.text, e.batch.label
         # import pdb; pdb.set_trace()
         y_predict = e.model(x, x_length)
-        return y_predict.argmax().view(1,1), label.view(1,1)
+        return y_predict.argmax().view(1, 1), label.view(1, 1)
 
 
-    # train(train_iter, dev_iter, model, criterion, optimizer, max_iters=500, save_every=500, device="cuda",
-    #       handler=model_train, patience=PATIENCE)
+    train(train_iter, dev_iter, model, criterion, optimizer, max_iters=1000, save_every=1000, device="cuda",
+          handler=model_train, patience=PATIENCE)
 
 
 
-    y, g = evaluate(dev_iter, model, model_location="checkpoint/Classifier.500.pt",
+    y, g = evaluate(test_iter, model, model_location="checkpoint/Classifier.500.pt",
                     criterion=criterion, device="cuda", handler=model_eval)
 
 

@@ -19,7 +19,7 @@ from train import *
 torch.cuda.set_device(0)
 
 # early stop
-PATIENCE = 100
+PATIENCE = None
 
 class Classifier(nn.Module):
     def __init__(self, encoder, out_class, hidden_size=256, dropout_p=0.1):

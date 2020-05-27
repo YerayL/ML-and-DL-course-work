@@ -38,7 +38,7 @@ def eval(data_iter, model,criterion, epoch):
             predicted = model(words, lens)  # predicted_seq : (batch_size, seq_len)
             loss = criterion(predicted, labels)
             total_loss += loss.item()
-            print('\ntotal_loss', round(total_loss,3),'batch_loss',loss.item(), 'epoch', epoch)
+            print('\ntotal_loss', round(total_loss,3), 'epoch', epoch)
             predicted = predicted.max(dim=1)[1]
             r += (predicted - labels).eq(0).sum().item()
             total += predicted.size(0)
@@ -46,7 +46,7 @@ def eval(data_iter, model,criterion, epoch):
     return acc
 
 def train(data, dev_iter, model, criterion, optimizer, max_iters=1000, save_every=1000,
-          device="cuda", handler=None, patience=10000):
+          device="cuda", handler=None, patience=None):
     model.train()
     meta = Event(name="meta")
     progress = tqdm(total=max_iters, miniters=0)
@@ -60,6 +60,7 @@ def train(data, dev_iter, model, criterion, optimizer, max_iters=1000, save_ever
     patience_counter = 0
 
     while current_iter < max_iters + 1:
+        model.train()
         iterator = enumerate(data)
         for i,batch in iterator:
             event.current_iter = current_iter
@@ -71,28 +72,29 @@ def train(data, dev_iter, model, criterion, optimizer, max_iters=1000, save_ever
                 break
             event.progress.update(1)
 
-        dev_acc = eval(dev_iter, model,criterion, current_iter)
-        if dev_acc < best_acc:
-            patience_counter += 1
-            tqdm.write("No improvement, patience: %d/%d" % (patience_counter, patience))
-            tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
-            # if patience_counter == patience-1:
-            #     tqdm.write("model save!!! patience: %d/%d" % (patience-1, patience))
-            #     torch.save({"start": current_iter + 1, "model": event.model.state_dict(),
-            #                 "optim": event.optimizer.state_dict()},os.path.join("checkpoint",
-            #                 f"{event.model.__class__.__name__}.{current_iter}.pt"))
 
-        else:
-            tqdm.write("New best model,  patience: 0/%d" % patience)
-            tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
-            best_acc = dev_acc
-            patience_counter = 0
+        if patience:
+            dev_acc = eval(dev_iter, model,criterion, current_iter)
+            if dev_acc < best_acc:
+                patience_counter += 1
+                tqdm.write("No improvement, patience: %d/%d" % (patience_counter, patience))
+                tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
+                # if patience_counter == patience-1:
+                #     tqdm.write("model save!!! patience: %d/%d" % (patience-1, patience))
+                #     torch.save({"start": current_iter + 1, "model": event.model.state_dict(),
+                #                 "optim": event.optimizer.state_dict()},os.path.join("checkpoint",
+                #                 f"{event.model.__class__.__name__}.{current_iter}.pt"))
 
+            else:
+                tqdm.write("New best model,  patience: 0/%d" % patience)
+                tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
+                best_acc = dev_acc
+                patience_counter = 0
 
-        if patience_counter >= patience:
-            tqdm.write("Early stopping: patience limit reached, stopping...")
-            tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
-            break
+            if patience_counter >= patience:
+                tqdm.write("Early stopping: patience limit reached, stopping...")
+                tqdm.write("dev_acc, best_acc: %.3f/%.3f" % (dev_acc, best_acc))
+                break
 
 
 def evaluate(data, model, model_location, criterion, no_grad=True, device="cuda", handler=None):

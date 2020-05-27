@@ -23,6 +23,10 @@ class BertEncoder(nn.Module):
         self.out_dim = out_dim
         self.bert = BertModel.from_pretrained(pretrained_model)
 
+        # for name, param in self.bert.named_parameters():
+        #     if param.requires_grad:
+        #         print(name)
+
         # for p in self.bert.parameters():
         #    p.requires_grad = False
 
